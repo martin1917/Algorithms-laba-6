@@ -2,6 +2,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileWrapper {
 
@@ -80,6 +82,18 @@ public class FileWrapper {
         }
 
         return Integer.parseInt(sb.toString());
+    }
+
+    public List<Integer> getAllNumbers() throws IOException {
+        file.seek(0);
+        List<Integer> res = new ArrayList<Integer>(countNumber);
+
+        String[] numbers = file.readLine().trim().split(" ");
+        for(String num : numbers) {
+            res.add(Integer.parseInt(num));
+        }
+        
+        return res;
     }
 
     public void copyFrom(FileWrapper fromFile) throws IOException {
