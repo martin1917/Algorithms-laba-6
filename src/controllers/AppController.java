@@ -2,11 +2,10 @@ package controllers;
 
 import java.util.List;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import Utils.FileWrapper;
 
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,18 +24,18 @@ public class AppController {
     private Button btnSortTwo;
 
     @FXML
-    private TableView<List<Integer>> tableTwo;
+    private TableView<List<String>> tableTwo;
 
     @FXML
     private Button btnSortOne;
 
     @FXML
-    private TableView<List<Integer>> tableOne;
+    private TableView<List<String>> tableOne;
 
     @FXML
     void initialize() {
         btnSortTwo.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            List<List<Integer>> allSteps = null;
+            List<List<String>> allSteps = null;
             try {
                 FileWrapper file = fillFile();
                 allSteps = SolutionWithData.externalSortTwoStageSimpleMerge(file);
@@ -47,7 +46,7 @@ public class AppController {
         });
 
         btnSortOne.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            List<List<Integer>> allSteps = null;
+            List<List<String>> allSteps = null;
             try {
                 FileWrapper file = fillFile();
                 allSteps = SolutionWithData.externalSortOneStageSimpleMerge(file);
@@ -66,21 +65,21 @@ public class AppController {
         return file;
     }
 
-    private void fillTable(TableView<List<Integer>> table, List<List<Integer>> allSteps) {
+    private void fillTable(TableView<List<String>> table, List<List<String>> allSteps) {
         table.getColumns().clear();
-        ObservableList<List<Integer>> data = FXCollections.observableArrayList(allSteps);
+        ObservableList<List<String>> data = FXCollections.observableArrayList(allSteps);
         for(int i = 0; i < allSteps.get(0).size(); i++) {
             TableColumn tc = new TableColumn<>((i+1) + "");
             tc.setSortable(false);
             int number = i;
-            tc.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<List<Integer>, Integer>, ObservableValue<Integer>>() {
+            tc.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<List<String>, String>, ObservableValue<String>>() {
 
                 @Override
-                public ObservableValue<Integer> call(CellDataFeatures<List<Integer>, Integer> arg) {
+                public ObservableValue<String> call(CellDataFeatures<List<String>, String> arg) {
                     if (number >= arg.getValue().size()) {
-                        return new SimpleIntegerProperty(-1).asObject();    
+                        return new SimpleStringProperty("");    
                     } else {
-                        return new SimpleIntegerProperty(arg.getValue().get(number)).asObject();
+                        return new SimpleStringProperty(arg.getValue().get(number));
                     }
                 }
             });

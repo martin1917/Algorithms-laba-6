@@ -6,8 +6,8 @@ import java.util.List;
 import Utils.FileWrapper;
 
 public class SolutionWithData {
-    public static List<List<Integer>> externalSortTwoStageSimpleMerge(FileWrapper fileWithData) throws IOException {
-        List<List<Integer>> allSteps = new ArrayList<List<Integer>>();
+    public static List<List<String>> externalSortTwoStageSimpleMerge(FileWrapper fileWithData) throws IOException {
+        List<List<String>> allSteps = new ArrayList<List<String>>();
         
         FileWrapper fileA = new FileWrapper("other//files1//a.txt");
         FileWrapper fileB = new FileWrapper("other//files1//b.txt");
@@ -15,13 +15,13 @@ public class SolutionWithData {
         
         fileWithData.open();
         allSteps.add(fileWithData.getAllNumbers());
-        fileA.open();
+        fileA.openAndClear();
         fileA.copyFrom(fileWithData);
         fileWithData.close();
         
         //открываем файлы B и C
-        fileB.open();
-        fileC.open();
+        fileB.openAndClear();
+        fileC.openAndClear();
 
         //длина цепочки
         int len = 1;
@@ -63,6 +63,7 @@ public class SolutionWithData {
             
             allSteps.add(fileB.getAllNumbers());
             allSteps.add(fileC.getAllNumbers());
+            allSteps.add(List.of());
             allSteps.add(fileA.getAllNumbers());
 
             //удваиваем длину цепочки
@@ -146,8 +147,8 @@ public class SolutionWithData {
         }
     }
 
-    public static List<List<Integer>> externalSortOneStageSimpleMerge(FileWrapper fileWithData) throws IOException {
-        List<List<Integer>> allSteps = new ArrayList<List<Integer>>();
+    public static List<List<String>> externalSortOneStageSimpleMerge(FileWrapper fileWithData) throws IOException {
+        List<List<String>> allSteps = new ArrayList<List<String>>();
 
         FileWrapper fileA = new FileWrapper("other//files2//a.txt");
         FileWrapper fileB = new FileWrapper("other//files2//b.txt");
@@ -157,22 +158,23 @@ public class SolutionWithData {
 
         fileWithData.open();
         allSteps.add(fileWithData.getAllNumbers());
-        fileA.open();
+        fileA.openAndClear();
         fileA.copyFrom(fileWithData);
         fileWithData.close();
 
         //открываем файлы B и C
-        fileB.open();
-        fileC.open();
+        fileB.openAndClear();
+        fileC.openAndClear();
 
         //разбиваем файл A на 2 файла B и C
         makeTwoFiles(fileA, fileB, fileC);
         allSteps.add(fileB.getAllNumbers());
         allSteps.add(fileC.getAllNumbers());
+        allSteps.add(List.of());
 
         //открываем файлы D и E
-        fileD.open();
-        fileE.open();
+        fileD.openAndClear();
+        fileE.openAndClear();
 
         //true  --> читаем из B и C; пишем в D и E
         //false --> читаем из D и E; пишем в B и C
@@ -238,6 +240,7 @@ public class SolutionWithData {
 
             allSteps.add(in1.getAllNumbers());
             allSteps.add(in2.getAllNumbers());
+            allSteps.add(List.of());
 
             //очищаем прочитанные файлы
             from1.clear();
