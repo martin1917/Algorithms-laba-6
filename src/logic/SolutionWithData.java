@@ -1,6 +1,9 @@
+package logic;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import Utils.FileWrapper;
 
 public class SolutionWithData {
     public static List<List<Integer>> externalSortTwoStageSimpleMerge(FileWrapper fileWithData) throws IOException {
