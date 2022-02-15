@@ -2,9 +2,9 @@ import java.io.IOException;
 
 public class Solution {
     public static void externalSortTwoStageSimpleMerge(FileWrapper fileWithData) throws IOException {
-        FileWrapper fileA = new FileWrapper("files1//a.txt");
-        FileWrapper fileB = new FileWrapper("files1//b.txt");
-        FileWrapper fileC = new FileWrapper("files1//c.txt");
+        FileWrapper fileA = new FileWrapper("other//files1//a.txt");
+        FileWrapper fileB = new FileWrapper("other//files1//b.txt");
+        FileWrapper fileC = new FileWrapper("other//files1//c.txt");
 
         fileWithData.open();
         fileA.open();
@@ -132,11 +132,11 @@ public class Solution {
     }
 
     public static void externalSortOneStageSimpleMerge(FileWrapper fileWithData) throws IOException {
-        FileWrapper fileA = new FileWrapper("files2//a.txt");
-        FileWrapper fileB = new FileWrapper("files2//b.txt");
-        FileWrapper fileC = new FileWrapper("files2//c.txt");
-        FileWrapper fileD = new FileWrapper("files2//d.txt");
-        FileWrapper fileE = new FileWrapper("files2//e.txt");
+        FileWrapper fileA = new FileWrapper("other//files2//a.txt");
+        FileWrapper fileB = new FileWrapper("other//files2//b.txt");
+        FileWrapper fileC = new FileWrapper("other//files2//c.txt");
+        FileWrapper fileD = new FileWrapper("other//files2//d.txt");
+        FileWrapper fileE = new FileWrapper("other//files2//e.txt");
 
         fileWithData.open();
         fileA.open();
