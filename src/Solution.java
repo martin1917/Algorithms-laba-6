@@ -1,17 +1,12 @@
 import java.io.IOException;
 
 public class Solution {
-    public static void externalSortTwoStageSimpleMerge(int count) throws IOException {
-        FileWrapper fileWithData = new FileWrapper("files1//data.txt");
+    public static void externalSortTwoStageSimpleMerge(FileWrapper fileWithData) throws IOException {
         FileWrapper fileA = new FileWrapper("files1//a.txt");
         FileWrapper fileB = new FileWrapper("files1//b.txt");
         FileWrapper fileC = new FileWrapper("files1//c.txt");
-        
-        //заполняем файл числами
-        fileWithData.open();
-        fileWithData.fillByNumbers(count);
 
-        //копируем его в файл А
+        fileWithData.open();
         fileA.open();
         fileA.copyFrom(fileWithData);
         fileWithData.close();
@@ -136,19 +131,14 @@ public class Solution {
         }
     }
 
-    public static void externalSortOneStageSimpleMerge(int count) throws IOException {
-        FileWrapper fileWithData = new FileWrapper("files2//data.txt");
+    public static void externalSortOneStageSimpleMerge(FileWrapper fileWithData) throws IOException {
         FileWrapper fileA = new FileWrapper("files2//a.txt");
         FileWrapper fileB = new FileWrapper("files2//b.txt");
         FileWrapper fileC = new FileWrapper("files2//c.txt");
         FileWrapper fileD = new FileWrapper("files2//d.txt");
         FileWrapper fileE = new FileWrapper("files2//e.txt");
 
-        //заполняем файл числами
         fileWithData.open();
-        fileWithData.fillByNumbers(count);
-        
-        //копируем его в файл А
         fileA.open();
         fileA.copyFrom(fileWithData);
         fileWithData.close();
