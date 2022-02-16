@@ -21,11 +21,12 @@ public class SolutionDetails {
         //длина цепочки
         int len = 1;
         
-        double start = System.nanoTime();
         double countRead = 0;
         double countWrite = 0;
         double countCompare = 0;
-
+        
+        double start = System.nanoTime();
+        
         //выходим из цикла как только длина цепочки станет не меньше кол-во цифр
         while(len < fileA.getCount()) {
             fileB.clear();
@@ -228,11 +229,9 @@ public class SolutionDetails {
         fileA.copyFrom(fileWithData);
         fileWithData.close();
 
-        //открываем файлы B и C
+        //открываем файлы B, C, D, E
         fileB.openAndClear();
         fileC.openAndClear();
-
-        //открываем файлы D и E
         fileD.openAndClear();
         fileE.openAndClear();
 
@@ -346,11 +345,12 @@ public class SolutionDetails {
             c = writeInOneFile(fileD, fileE, fileA);
         }
 
+        double time = System.nanoTime() - start;
+
         countRead += c[0];
         countWrite += c[1];
         countCompare += c[2];
 
-        double time = System.nanoTime() - start;
 
         //закрываем все файлы
         fileA.close();
