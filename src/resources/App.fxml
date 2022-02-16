@@ -47,11 +47,11 @@
                   <Button fx:id="btnCompare" layoutX="440.0" layoutY="40.0" mnemonicParsing="false" text="Сравнить" />
                   <TableView fx:id="tableInfo" layoutX="19.0" layoutY="87.0" prefHeight="158.0" prefWidth="728.0">
                     <columns>
-                        <TableColumn prefWidth="75.0" text="Название" />
-                      <TableColumn prefWidth="75.0" text="Время" />
-                      <TableColumn minWidth="0.0" prefWidth="75.0" text="Кол-во чтений" />
-                        <TableColumn prefWidth="105.0" text="Кол-во записей" />
-                        <TableColumn prefWidth="75.0" text="Кол-во сравнений" />
+                        <TableColumn fx:id="columnName" prefWidth="75.0" text="Название" />
+                      <TableColumn fx:id="columnTime" prefWidth="75.0" text="Время" />
+                      <TableColumn fx:id="columnRead" minWidth="0.0" prefWidth="75.0" text="Кол-во чтений" />
+                        <TableColumn fx:id="columnWrite" prefWidth="105.0" text="Кол-во записей" />
+                        <TableColumn fx:id="columnCompare" prefWidth="75.0" text="Кол-во сравнений" />
                     </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -61,11 +61,11 @@
                   <Label layoutX="264.0" layoutY="361.0" text="От" />
                   <Label layoutX="350.0" layoutY="361.0" text="До" />
                   <Line endX="359.0" layoutX="383.0" layoutY="285.0" startX="-359.0" />
-                  <TableView layoutX="20.0" layoutY="432.0" prefHeight="120.0" prefWidth="728.0" />
                   <Button fx:id="btnWrite" layoutX="440.0" layoutY="349.0" mnemonicParsing="false" text="Вывести" />
                   <ComboBox fx:id="namesFiles" layoutX="264.0" layoutY="332.0" prefWidth="150.0" />
                   <TextField fx:id="indexStart" layoutX="264.0" layoutY="380.0" prefHeight="25.0" prefWidth="63.0" />
                   <TextField fx:id="indexEnd" layoutX="350.0" layoutY="380.0" prefHeight="25.0" prefWidth="63.0" />
+                  <TableView fx:id="tableInterval" layoutX="20.0" layoutY="432.0" prefHeight="120.0" prefWidth="728.0" />
                </children></AnchorPane>
         </content>
       </Tab>

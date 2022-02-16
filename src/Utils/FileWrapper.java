@@ -3,6 +3,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FileWrapper {
@@ -93,6 +94,41 @@ public class FileWrapper {
         file.seek(0);
         String[] numbers = file.readLine().trim().split(" ");    
         return List.of(numbers);
+    }
+
+    public List<String> getNumbersInInterval(int start, int end) throws IOException {
+        List<String> numbers = new ArrayList<String>();
+        for(int i = start; i <= end; i++) {
+            numbers.add(String.format("%d", getNumberByPosition(i)));
+        }
+        return numbers;
+    }
+
+    public int getSize() throws IOException {
+        if(!isOpen) {
+            throw new RuntimeException("File is closed");
+        }
+
+        file.seek(0);
+        String num = "";
+        int size = 0;
+
+        int ch = -1;
+        while((ch = file.read()) != -1) {
+            if (48 <= ch && ch <= 57) {
+                num += (char) ch;
+            }
+            if(ch == 32 && !num.isEmpty()) {
+                size++;
+                num = "";
+            }
+        }
+
+        if(!num.isEmpty()){
+            size++;
+        }
+        
+        return size;
     }
 
     public void copyFrom(FileWrapper fromFile) throws IOException {

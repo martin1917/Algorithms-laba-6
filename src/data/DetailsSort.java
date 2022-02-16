@@ -7,12 +7,16 @@ public class DetailsSort {
     private Double countWrite;
     private Double countCompare;
 
-    public DetailsSort(String name, Double time, Double countRead, Double countWrite, Double countCompare) {
+    private DetailsSort(String name, Double time, Double countRead, Double countWrite, Double countCompare) {
         this.name = name;
         this.time = time;
         this.countRead = countRead;
         this.countWrite = countWrite;
         this.countCompare = countCompare;
+    }
+
+    public static DetailsSort createByDetails(String name, double[] details) {
+        return new DetailsSort(name, details[0], details[1], details[2], details[3]);
     }
 
     public String getName() {
@@ -56,4 +60,14 @@ public class DetailsSort {
     }
 
 
+    @Override
+    public String toString() {
+        return "{" +
+            " name='" + getName() + "'" +
+            ", time='" + getTime() + "'" +
+            ", countRead='" + getCountRead() + "'" +
+            ", countWrite='" + getCountWrite() + "'" +
+            ", countCompare='" + getCountCompare() + "'" +
+            "}";
+    }
 }

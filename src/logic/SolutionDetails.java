@@ -78,8 +78,7 @@ public class SolutionDetails {
         fileB.close();
         fileC.close();
 
-        double[] arr = new double[]{time, countRead, countWrite, countCompare};
-        return arr;
+        return new double[]{time / 1000, countRead, countWrite, countCompare};
     }
     
     //объединяем 2 файла (B и C) в один (A)
@@ -359,6 +358,6 @@ public class SolutionDetails {
         fileC.close();
         fileD.close();
 
-        return new double[]{time, countRead, countWrite, countCompare};
+        return new double[]{time / 1000, countRead, countWrite, countCompare};
     }
 }
