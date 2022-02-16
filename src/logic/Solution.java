@@ -4,7 +4,7 @@ import java.io.IOException;
 import Utils.FileWrapper;
 
 public class Solution {
-    public static void externalSortTwoStageSimpleMerge(FileWrapper fileWithData) throws IOException {
+    public static void SortTwoStage(FileWrapper fileWithData) throws IOException {
         FileWrapper fileA = new FileWrapper("other//files1//a.txt");
         FileWrapper fileB = new FileWrapper("other//files1//b.txt");
         FileWrapper fileC = new FileWrapper("other//files1//c.txt");
@@ -53,7 +53,7 @@ public class Solution {
             }
 
             //объединяем файлы B и C в A
-            mergeIntoFile(fileA, fileB, fileC, len);
+            mergeFiles(fileA, fileB, fileC, len);
 
             //удваиваем длину цепочки
             len *= 2;
@@ -66,7 +66,7 @@ public class Solution {
     }
     
     //объединяем 2 файла (B и C) в один (A)
-    private static void mergeIntoFile(FileWrapper fileA, FileWrapper fileB, FileWrapper fileC, int len) throws IOException {
+    private static void mergeFiles(FileWrapper fileA, FileWrapper fileB, FileWrapper fileC, int len) throws IOException {
         fileA.clear();
 
         int countB = fileB.getCount();
@@ -77,7 +77,7 @@ public class Solution {
             int borderB = Math.min(i + len, countB);
             int borderC = Math.min(i + len, countC);
 
-            writeInOneFile(ib, borderB, ic, borderC, fileB, fileC, fileA);
+            writeInFile(ib, borderB, ic, borderC, fileB, fileC, fileA);
         }
 
         if (countB + countC > fileA.getCount()) {
@@ -103,11 +103,11 @@ public class Solution {
     }
 
     // Пишем в файл упорядоченные цепочки из двух других файлов
-    private static void writeInOneFile(FileWrapper readFile1, FileWrapper readFile2, FileWrapper writeFile) throws IOException {
-        writeInOneFile(0, readFile1.getCount(), 0, readFile2.getCount(), readFile1, readFile2, writeFile);
+    private static void writeInFile(FileWrapper readFile1, FileWrapper readFile2, FileWrapper writeFile) throws IOException {
+        writeInFile(0, readFile1.getCount(), 0, readFile2.getCount(), readFile1, readFile2, writeFile);
     }
 
-    private static void writeInOneFile(int i1, int j1, int i2, int j2, FileWrapper readFile1, FileWrapper readFile2, FileWrapper writeFile) throws IOException {
+    private static void writeInFile(int i1, int j1, int i2, int j2, FileWrapper readFile1, FileWrapper readFile2, FileWrapper writeFile) throws IOException {
         boolean readedElem1 = false;
         boolean readedElem2 = false;
         int elem1 = -1;
@@ -156,7 +156,7 @@ public class Solution {
         }
     }
 
-    public static void externalSortOneStageSimpleMerge(FileWrapper fileWithData) throws IOException {
+    public static void SortOneStage(FileWrapper fileWithData) throws IOException {
         FileWrapper fileA = new FileWrapper("other//files2//a.txt");
         FileWrapper fileB = new FileWrapper("other//files2//b.txt");
         FileWrapper fileC = new FileWrapper("other//files2//c.txt");
@@ -168,11 +168,9 @@ public class Solution {
         fileA.copyFrom(fileWithData);
         fileWithData.close();
 
-        //открываем файлы B и C
+        //открываем файлы B, C, D, E
         fileB.openAndClear();
         fileC.openAndClear();
-
-        //открываем файлы D и E
         fileD.openAndClear();
         fileE.openAndClear();
 
@@ -218,9 +216,9 @@ public class Solution {
                 //true  --> пишем из from1 и from2 в in1
                 //false --> пишем из from1 и from2 в in2
                 if(diraction){
-                    writeInOneFile(i1, border1, i2, border2, from1, from2, in1);
+                    writeInFile(i1, border1, i2, border2, from1, from2, in1);
                 } else {
-                    writeInOneFile(i1, border1, i2, border2, from1, from2, in2);
+                    writeInFile(i1, border1, i2, border2, from1, from2, in2);
                 }
 
                 //меняем направление
@@ -268,9 +266,9 @@ public class Solution {
         //Объединяем файлы ((B и C) или (D и E)) в один (A)
         fileA.clear();
         if(flag) {
-            writeInOneFile(fileB, fileC, fileA);
+            writeInFile(fileB, fileC, fileA);
         } else {
-            writeInOneFile(fileD, fileE, fileA);
+            writeInFile(fileD, fileE, fileA);
         }
 
         //закрываем все файлы
