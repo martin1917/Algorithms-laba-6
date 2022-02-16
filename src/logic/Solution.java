@@ -108,27 +108,49 @@ public class Solution {
     }
 
     private static void writeInOneFile(int i1, int j1, int i2, int j2, FileWrapper readFile1, FileWrapper readFile2, FileWrapper writeFile) throws IOException {
+        boolean readedElem1 = false;
+        boolean readedElem2 = false;
+        int elem1 = -1;
+        int elem2 = -1;
         while(i1 < j1 && i2 < j2) {
-            int elem1 = readFile1.getNumberByPosition(i1);
-            int elem2 = readFile2.getNumberByPosition(i2);
+            if (!readedElem1) {
+                elem1 = readFile1.getNumberByPosition(i1);
+                readedElem1 = true;
+            }
+            if (!readedElem2) {
+                elem2 = readFile2.getNumberByPosition(i2);
+                readedElem2 = true;
+            }
 
             if(elem1 < elem2) {
                 writeFile.writeNumber(elem1);
+                readedElem1 = false;
                 i1++;
             } else {
                 writeFile.writeNumber(elem2);
+                readedElem2 = false;
                 i2++;
             }
         }
 
-        while(i1 < j1) {
-            int elem1 = readFile1.getNumberByPosition(i1);
+        if(i1 < j1) {
             writeFile.writeNumber(elem1);
             i1++;
         }
 
+        while(i1 < j1) {
+            elem1 = readFile1.getNumberByPosition(i1);
+            writeFile.writeNumber(elem1);
+            i1++;
+        }
+
+        if(i2 < j2) {
+            writeFile.writeNumber(elem2);
+            i2++;
+        }
+
         while(i2 < j2) {
-            int elem2 = readFile2.getNumberByPosition(i2);
+            elem2 = readFile2.getNumberByPosition(i2);
             writeFile.writeNumber(elem2);
             i2++;
         }
@@ -173,7 +195,7 @@ public class Solution {
         int len = 1;
 
         //пока цепочек больше одной манипулируем файлами B, C, D, E
-        while((from1.getCount() / (double)len > 1) || (from2.getCount() / (double)len > 1)) {
+        while(2*len < fileA.getCount()) {
             //кол-во чисел в файлах
             int count1 = from1.getCount();
             int count2 = from2.getCount();

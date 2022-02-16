@@ -152,33 +152,58 @@ public class SolutionDetails {
         double countRead = 0;
         double countWrite = 0;
         double countCompare = 0;
+        boolean readedElem1 = false;
+        boolean readedElem2 = false;
+        int elem1 = -1;
+        int elem2 = -1;
         while(i1 < j1 && i2 < j2) {
-            int elem1 = readFile1.getNumberByPosition(i1);
-            int elem2 = readFile2.getNumberByPosition(i2);
-            countRead += 2;
+            if (!readedElem1) {
+                elem1 = readFile1.getNumberByPosition(i1);
+                countRead++;
+                readedElem1 = true;
+            }
+            if (!readedElem2) {
+                elem2 = readFile2.getNumberByPosition(i2);
+                countRead++;
+                readedElem2 = true;
+            }
 
             countCompare++;
             if(elem1 < elem2) {
                 writeFile.writeNumber(elem1);
+                readedElem1 = false;
                 countWrite++;
                 i1++;
             } else {
                 writeFile.writeNumber(elem2);
+                readedElem2 = false;
                 countWrite++;
                 i2++;
             }
         }
 
+        if(i1 < j1) {
+            writeFile.writeNumber(elem1);
+            countWrite++;
+            i1++;
+        }
+
         while(i1 < j1) {
-            int elem1 = readFile1.getNumberByPosition(i1);
+            elem1 = readFile1.getNumberByPosition(i1);
             writeFile.writeNumber(elem1);
             countRead++;
             countWrite++;
             i1++;
         }
 
+        if(i2 < j2) {
+            writeFile.writeNumber(elem2);
+            countWrite++;
+            i2++;
+        }
+
         while(i2 < j2) {
-            int elem2 = readFile2.getNumberByPosition(i2);
+            elem2 = readFile2.getNumberByPosition(i2);
             writeFile.writeNumber(elem2);
             countRead++;
             countWrite++;
@@ -235,7 +260,7 @@ public class SolutionDetails {
         int len = 1;
 
         //пока цепочек больше одной манипулируем файлами B, C, D, E
-        while((from1.getCount() / (double)len > 1) || (from2.getCount() / (double)len > 1)) {
+        while(2*len < fileA.getCount()) {
             //кол-во чисел в файлах
             int count1 = from1.getCount();
             int count2 = from2.getCount();
