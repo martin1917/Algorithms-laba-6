@@ -4,21 +4,19 @@ import java.io.IOException;
 import Utils.FileWrapper;
 
 public class SolutionDetails {
-    public static double[] externalSortTwoStageSimpleMerge(FileWrapper fileWithData) throws IOException {
+    public static double[] sortTwoStage(FileWrapper fileWithData) throws IOException {
         FileWrapper fileA = new FileWrapper("other//files1//a.txt");
         FileWrapper fileB = new FileWrapper("other//files1//b.txt");
         FileWrapper fileC = new FileWrapper("other//files1//c.txt");
 
-        fileWithData.open();
         fileA.openAndClear();
-        fileA.copyFrom(fileWithData);
-        fileWithData.close();
-        
-        //открываем файлы B и C
         fileB.openAndClear();
         fileC.openAndClear();
 
-        //длина цепочки
+        fileWithData.open();
+        fileA.copyFrom(fileWithData);
+        fileWithData.close();
+        
         int len = 1;
         
         double countRead = 0;
@@ -27,7 +25,6 @@ public class SolutionDetails {
         
         double start = System.nanoTime();
         
-        //выходим из цикла как только длина цепочки станет не меньше кол-во цифр
         while(len < fileA.getCount()) {
             fileB.clear();
             fileC.clear();
@@ -62,12 +59,11 @@ public class SolutionDetails {
             }
 
             //объединяем файлы B и C в A
-            double[] c = mergeIntoFile(fileA, fileB, fileC, len);
+            double[] c = mergeFiles(fileA, fileB, fileC, len);
             countRead += c[0];
             countWrite += c[1];
             countCompare += c[2];
 
-            //удваиваем длину цепочки
             len *= 2;
         }
 
@@ -83,7 +79,7 @@ public class SolutionDetails {
     }
     
     //объединяем 2 файла (B и C) в один (A)
-    private static double[] mergeIntoFile(FileWrapper fileA, FileWrapper fileB, FileWrapper fileC, int len) throws IOException {
+    private static double[] mergeFiles(FileWrapper fileA, FileWrapper fileB, FileWrapper fileC, int len) throws IOException {
         fileA.clear();
 
         double countRead = 0;
@@ -98,7 +94,7 @@ public class SolutionDetails {
             int borderB = Math.min(i + len, countB);
             int borderC = Math.min(i + len, countC);
 
-            double[] c = writeInOneFile(ib, borderB, ic, borderC, fileB, fileC, fileA);
+            double[] c = writeInFile(ib, borderB, ic, borderC, fileB, fileC, fileA);
             countRead += c[0];
             countWrite += c[1];
             countCompare += c[2];
@@ -144,11 +140,11 @@ public class SolutionDetails {
     }
 
     // Пишем в файл упорядоченные цепочки из двух других файлов
-    private static double[] writeInOneFile(FileWrapper readFile1, FileWrapper readFile2, FileWrapper writeFile) throws IOException {
-        return writeInOneFile(0, readFile1.getCount(), 0, readFile2.getCount(), readFile1, readFile2, writeFile);
+    private static double[] writeInFile(FileWrapper readFile1, FileWrapper readFile2, FileWrapper writeFile) throws IOException {
+        return writeInFile(0, readFile1.getCount(), 0, readFile2.getCount(), readFile1, readFile2, writeFile);
     }
 
-    private static double[] writeInOneFile(int i1, int j1, int i2, int j2, FileWrapper readFile1, FileWrapper readFile2, FileWrapper writeFile) throws IOException {
+    private static double[] writeInFile(int i1, int j1, int i2, int j2, FileWrapper readFile1, FileWrapper readFile2, FileWrapper writeFile) throws IOException {
         double countRead = 0;
         double countWrite = 0;
         double countCompare = 0;
@@ -213,7 +209,74 @@ public class SolutionDetails {
         return new double[]{countRead, countWrite, countCompare};
     }
 
-    public static double[] externalSortOneStageSimpleMerge(FileWrapper fileWithData) throws IOException {
+    private static double[] switchFile(int len, FileWrapper from1, FileWrapper from2, FileWrapper in1, FileWrapper in2) throws IOException {
+        int countRead = 0;
+        int countWrite = 0;
+        int countCompare = 0;
+        
+        //кол-во чисел в файлах
+        int count1 = from1.getCount();
+        int count2 = from2.getCount();
+
+        //минимальное кол-во
+        int minLen = Math.min(count1, count2);
+
+        //Переменная для определения файла записи
+        boolean diraction = true;
+
+        for(int i = 0; i < minLen; i += len) {
+            //начальные индексы текующих цепочек
+            int i1 = i, i2 = i;
+
+            //конечные индексы текующих цепочек
+            int border1 = Math.min(i + len, count1);
+            int border2 = Math.min(i + len, count2);
+
+            double[] c;
+
+            //пишем в два других файла упорядоченные цепочки в зависимости от diraction
+            //true  --> пишем из from1 и from2 в in1
+            //false --> пишем из from1 и from2 в in2
+            if(diraction){
+                c = writeInFile(i1, border1, i2, border2, from1, from2, in1);
+            } else {
+                c = writeInFile(i1, border1, i2, border2, from1, from2, in2);
+            }
+
+            countRead += c[0];
+            countWrite += c[1];
+            countCompare += c[2];
+
+            diraction = !diraction;
+        }
+
+        //нерасмотренные числа в одном из файлов копируем в in1 или in2
+        //так как кол-во чисел в одном из них может быть больше minLen,
+        //а итерировались мы до minLen
+        if(from1.getCount() + from2.getCount() > in1.getCount() + in2.getCount()) {
+            if(diraction) {
+                in1.copyFrom(from1, minLen);
+                in1.copyFrom(from2, minLen);
+            } else {
+                in2.copyFrom(from1, minLen);
+                in2.copyFrom(from2, minLen);
+            }
+
+            countRead += from1.getCount() - minLen;
+            countWrite += from1.getCount() - minLen;
+            
+            countRead += from2.getCount() - minLen;
+            countWrite += from2.getCount() - minLen;
+        }
+
+        //очищаем прочитанные файлы
+        from1.clear();
+        from2.clear();
+
+        return new double[]{countRead, countWrite, countCompare};
+    }
+
+    public static double[] sortOneStage(FileWrapper fileWithData) throws IOException {
         double countRead = 0;
         double countWrite = 0;
         double countCompare = 0;
@@ -224,16 +287,15 @@ public class SolutionDetails {
         FileWrapper fileD = new FileWrapper("other//files2//d.txt");
         FileWrapper fileE = new FileWrapper("other//files2//e.txt");
 
-        fileWithData.open();
         fileA.openAndClear();
-        fileA.copyFrom(fileWithData);
-        fileWithData.close();
-
-        //открываем файлы B, C, D, E
         fileB.openAndClear();
         fileC.openAndClear();
         fileD.openAndClear();
         fileE.openAndClear();
+
+        fileWithData.open();
+        fileA.copyFrom(fileWithData);
+        fileWithData.close();
 
         //разбиваем файл A на 2 файла B и C
         double start = System.nanoTime();
@@ -246,93 +308,21 @@ public class SolutionDetails {
         //false --> читаем из D и E; пишем в B и C
         boolean flag = true;
 
-        //файлы для чтения
-        FileWrapper from1 = fileB;
-        FileWrapper from2 = fileC;
-
-        //файлы для записи
-        FileWrapper in1 = fileD;
-        FileWrapper in2 = fileE;
-
-        //длина цепочки
         int len = 1;
 
-        //пока цепочек больше одной манипулируем файлами B, C, D, E
         while(2*len < fileA.getCount()) {
-            //кол-во чисел в файлах
-            int count1 = from1.getCount();
-            int count2 = from2.getCount();
-
-            //минимальное кол-во
-            int minLen = Math.min(count1, count2);
-
-            //Переменная для определения файла записи
-            boolean diraction = true;
-
-            for(int i = 0; i < minLen; i += len) {
-                //начальные индексы текующих цепочек
-                int i1 = i, i2 = i;
-
-                //конечные индексы текующих цепочек
-                int border1 = Math.min(i + len, count1);
-                int border2 = Math.min(i + len, count2);
-
-                //пишем в два других файла упорядоченные цепочки в зависимости от diraction
-                //true  --> пишем из from1 и from2 в in1
-                //false --> пишем из from1 и from2 в in2
-                if(diraction){
-                    c = writeInOneFile(i1, border1, i2, border2, from1, from2, in1);
-                } else {
-                    c = writeInOneFile(i1, border1, i2, border2, from1, from2, in2);
-                }
-
-                countRead += c[0];
-                countWrite += c[1];
-                countCompare += c[2];
-
-                //меняем направление
-                diraction = !diraction;
-            }
-
-            //нерасмотренные числа в одном из файлов копируем в in1 или in2
-            //так как кол-во чисел в одном из них может быть больше minLen,
-            //а итерировались мы до minLen
-            if(from1.getCount() + from2.getCount() > in1.getCount() + in2.getCount()) {
-                if(diraction) {
-                    in1.copyFrom(from1, minLen);
-                    in1.copyFrom(from2, minLen);
-                } else {
-                    in2.copyFrom(from1, minLen);
-                    in2.copyFrom(from2, minLen);
-                }
-
-                countRead += from1.getCount() - minLen;
-                countWrite += from1.getCount() - minLen;
-                
-                countRead += from2.getCount() - minLen;
-                countWrite += from2.getCount() - minLen;
-            }
-
-            //очищаем прочитанные файлы
-            from1.clear();
-            from2.clear();
-
-            // запись <-> чтение
+        
             if(flag) {
-                from1 = fileD;
-                from2 = fileE;
-                in1 = fileB;
-                in2 = fileC;
-
+                c = switchFile(len, fileB, fileC, fileD, fileE);
             } else {
-                from1 = fileB;
-                from2 = fileC;
-                in1 = fileD;
-                in2 = fileE;
+                c = switchFile(len, fileD, fileE, fileB, fileC);
             }
-            flag = !flag;
 
-            //удвоение длины цепочки
+            countRead += c[0];
+            countWrite += c[1];
+            countCompare += c[2];
+
+            flag = !flag;
             len *= 2;
         }
 
@@ -340,9 +330,9 @@ public class SolutionDetails {
         //Объединяем файлы ((B и C) или (D и E)) в один (A)
         fileA.clear();
         if(flag) {
-            c = writeInOneFile(fileB, fileC, fileA);
+            c = writeInFile(fileB, fileC, fileA);
         } else {
-            c = writeInOneFile(fileD, fileE, fileA);
+            c = writeInFile(fileD, fileE, fileA);
         }
 
         double time = System.nanoTime() - start;

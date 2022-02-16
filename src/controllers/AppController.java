@@ -132,8 +132,8 @@ public class AppController {
             int count = spinnerCount.getValue();
             try {
                 FileWrapper file = fillFile(count);
-                DetailsSort details1 = DetailsSort.createByDetails("двухфазная", SolutionDetails.externalSortTwoStageSimpleMerge(file));
-                DetailsSort details2 = DetailsSort.createByDetails("однофазная", SolutionDetails.externalSortOneStageSimpleMerge(file));
+                DetailsSort details1 = DetailsSort.createByDetails("двухфазная", SolutionDetails.sortTwoStage(file));
+                DetailsSort details2 = DetailsSort.createByDetails("однофазная", SolutionDetails.sortOneStage(file));
 
                 tableInfo.getItems().clear();
                 tableInfo.setItems(FXCollections.observableArrayList(List.of(details1, details2)));
