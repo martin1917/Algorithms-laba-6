@@ -184,19 +184,18 @@ public class SolutionWithData {
         fileA.copyFrom(fileWithData);
         fileWithData.close();
 
-        //открываем файлы B и C
+        //открываем файлы B, C, D, E
         fileB.openAndClear();
         fileC.openAndClear();
+        fileD.openAndClear();
+        fileE.openAndClear();
 
         //разбиваем файл A на 2 файла B и C
         makeTwoFiles(fileA, fileB, fileC);
         allSteps.add(fileB.getAllNumbers());
         allSteps.add(fileC.getAllNumbers());
         allSteps.add(List.of());
-
-        //открываем файлы D и E
-        fileD.openAndClear();
-        fileE.openAndClear();
+        
 
         //true  --> читаем из B и C; пишем в D и E
         //false --> читаем из D и E; пишем в B и C
