@@ -57,14 +57,14 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
                   </TableView>
-                  <Label layoutX="264.0" layoutY="309.0" text="Название файла" />
-                  <Label layoutX="264.0" layoutY="361.0" text="От" />
-                  <Label layoutX="350.0" layoutY="361.0" text="До" />
+                  <Label layoutX="65.0" layoutY="325.0" text="Название файла" visible="false" />
+                  <Label layoutX="264.0" layoutY="327.0" text="От" />
+                  <Label layoutX="350.0" layoutY="327.0" text="До" />
                   <Line endX="359.0" layoutX="383.0" layoutY="285.0" startX="-359.0" />
                   <Button fx:id="btnWrite" layoutX="440.0" layoutY="349.0" mnemonicParsing="false" text="Вывести" />
-                  <ComboBox fx:id="namesFiles" layoutX="264.0" layoutY="332.0" prefWidth="150.0" />
-                  <TextField fx:id="indexStart" layoutX="264.0" layoutY="380.0" prefHeight="25.0" prefWidth="63.0" />
-                  <TextField fx:id="indexEnd" layoutX="350.0" layoutY="380.0" prefHeight="25.0" prefWidth="63.0" />
+                  <ComboBox fx:id="namesFiles" layoutX="65.0" layoutY="348.0" prefWidth="150.0" visible="false" />
+                  <TextField fx:id="indexStart" layoutX="264.0" layoutY="346.0" prefHeight="25.0" prefWidth="63.0" />
+                  <TextField fx:id="indexEnd" layoutX="350.0" layoutY="346.0" prefHeight="25.0" prefWidth="63.0" />
                   <TableView fx:id="tableInterval" layoutX="20.0" layoutY="432.0" prefHeight="120.0" prefWidth="728.0" />
                </children></AnchorPane>
         </content>

@@ -1,7 +1,7 @@
 package controllers;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import Utils.FileWrapper;
@@ -29,57 +29,29 @@ import logic.SolutionWithData;
 
 public class AppController {
 
-    @FXML
-    private Button btnSortTwo;
+    @FXML private Button btnSortTwo;
+    @FXML private TableView<List<String>> tableTwo;
 
-    @FXML
-    private TableView<List<String>> tableTwo;
+    @FXML private Button btnSortOne;
+    @FXML private TableView<List<String>> tableOne;
 
-    @FXML
-    private Button btnSortOne;
+    @FXML private Spinner<Integer> spinnerCount;
+    @FXML private Button btnCompare;
+    @FXML private TableView<DetailsSort> tableInfo;
 
-    @FXML
-    private TableView<List<String>> tableOne;
+    @FXML private ComboBox<String> namesFiles;
 
-    @FXML
-    private Spinner<Integer> spinnerCount;
-
-    @FXML
-    private Button btnCompare;
-
-    @FXML
-    private TableView<DetailsSort> tableInfo;
-
-    @FXML
-    private ComboBox<String> namesFiles;
-
-    @FXML
-    private TextField indexStart;
-
-    @FXML
-    private TextField indexEnd;
-
-    @FXML
-    private Button btnWrite;
-
-    @FXML
-    private TableColumn<DetailsSort, String> columnName;
-
-    @FXML
-    private TableColumn<DetailsSort, Double> columnTime;
-
-    @FXML
-    private TableColumn<DetailsSort, Double> columnRead;
-
-    @FXML
-    private TableColumn<DetailsSort, Double> columnWrite;
-
-    @FXML
-    private TableColumn<DetailsSort, Double> columnCompare;
-
-    @FXML
-    private TableView<List<String>> tableInterval;
-
+    @FXML private TextField indexStart;
+    @FXML private TextField indexEnd;
+    @FXML private Button btnWrite;
+    
+    @FXML private TableView<List<String>> tableInterval;
+    @FXML private TableColumn<DetailsSort, String> columnName;
+    @FXML private TableColumn<DetailsSort, Double> columnTime;
+    @FXML private TableColumn<DetailsSort, Double> columnRead;
+    @FXML private TableColumn<DetailsSort, Double> columnWrite;
+    @FXML private TableColumn<DetailsSort, Double> columnCompare;
+    
     @FXML
     void initialize() {
         setMouseEvent();
@@ -102,106 +74,116 @@ public class AppController {
     }
 
     //обработчики кнопок
-    private void setMouseEvent() {
-        //двухфазная сортировка
-        btnSortTwo.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            List<List<String>> allSteps = null;
-            try {
-                FileWrapper file = fillFile(15);
-                allSteps = SolutionWithData.externalSortTwoStageSimpleMerge(file);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            fillTable(tableTwo, allSteps);
-        });
+    private void setMouseEvent() {        
+        btnSortTwo.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> sortTwo());
+        btnSortOne.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> sortOne());
+        btnCompare.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> printInfoInTable());
+        btnWrite.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> printNumbersInInterval());
+    }
 
-        //однофазная сортировка
-        btnSortOne.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            List<List<String>> allSteps = null;
-            try {
-                FileWrapper file = fillFile(15);
-                allSteps = SolutionWithData.externalSortOneStageSimpleMerge(file);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            fillTable(tableOne, allSteps);
-        });
+    //двухфазная сортировка
+    private void sortTwo() {
+        List<List<String>> allSteps = null;
+        try {
+            FileWrapper file = fillFile(15);
+            allSteps = SolutionWithData.externalSortTwoStageSimpleMerge(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        fillTable(tableTwo, allSteps);
+    }
 
-        //вывод информации по сортировкам
-        btnCompare.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            int count = spinnerCount.getValue();
-            try {
-                FileWrapper file = fillFile(count);
-                DetailsSort details1 = DetailsSort.createByDetails("двухфазная", SolutionDetails.sortTwoStage(file));
-                DetailsSort details2 = DetailsSort.createByDetails("однофазная", SolutionDetails.sortOneStage(file));
+    //однофазная сортировка
+    private void sortOne() {
+        List<List<String>> allSteps = null;
+        try {
+            FileWrapper file = fillFile(15);
+            allSteps = SolutionWithData.externalSortOneStageSimpleMerge(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        fillTable(tableOne, allSteps);
+    }
 
-                tableInfo.getItems().clear();
-                tableInfo.setItems(FXCollections.observableArrayList(List.of(details1, details2)));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+    //вывод информации по сортировкам
+    private void printInfoInTable() {
+        int count = spinnerCount.getValue();
+        try {
+            FileWrapper file = fillFile(count);
+            DetailsSort details1 = DetailsSort.createByDetails("двухфазная", SolutionDetails.sortTwoStage(file));
+            DetailsSort details2 = DetailsSort.createByDetails("однофазная", SolutionDetails.sortOneStage(file));
 
-        //вывод чисел в интервале
-        btnWrite.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            int start;
-            try{
-                start = Integer.parseInt(indexStart.getText());
-            } catch(NumberFormatException ex) {
-                showErrorAlert("Левая граница интервала должна быть неотрицательным числом", "Введите неотрицательное число");
+            tableInfo.getItems().clear();
+            tableInfo.setItems(FXCollections.observableArrayList(List.of(details1, details2)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //вывод чисел в интервале
+    private void printNumbersInInterval() {
+        int start;
+        try{
+            start = Integer.parseInt(indexStart.getText());
+        } catch(NumberFormatException ex) {
+            showErrorAlert("Левая граница интервала должна быть неотрицательным числом", "Введите неотрицательное число");
+            return;
+        }
+
+        int end;
+        try{
+            end = Integer.parseInt(indexEnd.getText());
+        } catch(NumberFormatException ex) {
+            showErrorAlert("Правая граница интервала должна быть неотрицательным числом", "Введите неотрицательное число");
+            return;
+        }
+
+        if(start > end) {
+            showErrorAlert("Левая граница должна быть не больше правой границы", "Проверьте корректность интервала");
+            return;
+        }
+
+        if(tableInfo.getItems().size() == 0) {
+            showErrorAlert("Нет данных", "Сначала необходимо сравнить сортировки");
+            return;
+        }
+
+        List<List<String>> allNumbers = new ArrayList<List<String>>();
+
+        try {
+            FileWrapper file = new FileWrapper("other//data.txt");
+            FileWrapper file1 = new FileWrapper("other//files1//a.txt");
+            FileWrapper file2 = new FileWrapper("other//files2//a.txt");
+
+            file.open();
+            file1.open();
+            file2.open();
+
+            int size = file.getSize();
+            if(end >= size || start >= size) {
+                showErrorAlert("В файле всего " + size+ " чисел", "Проверьте корректность интервала");
                 return;
             }
 
-            int end;
-            try{
-                end = Integer.parseInt(indexEnd.getText());
-            } catch(NumberFormatException ex) {
-                showErrorAlert("Правая граница интервала должна быть неотрицательным числом", "Введите неотрицательное число");
-                return;
-            }
+            List<String> nums = file.getNumbersInInterval(start, end);
+            nums.add(0, "a");
+            List<String> nums1 = file1.getNumbersInInterval(start, end);
+            nums1.add(0, "a1");
+            List<String> nums2 = file2.getNumbersInInterval(start, end);
+            nums2.add(0, "a2");
 
-            if(start > end) {
-                showErrorAlert("Левая граница должна быть не больше правой границы", "Проверьте корректность интервала");
-                return;
-            }
+            allNumbers.add(nums);
+            allNumbers.add(nums1);
+            allNumbers.add(nums2);
 
-            if(tableInfo.getItems().size() == 0) {
-                showErrorAlert("Нет данных", "Сначала необходимо сравнить сортировки");
-                return;
-            }
+            file.close();
+            file1.close();
+            file2.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-            FileWrapper file = null;
-            String name = namesFiles.getValue();
-            switch(name) {
-                case "Начальный файл":
-                    file = new FileWrapper("other//data.txt");
-                    break;
-                case "После двухфазной":
-                    file = new FileWrapper("other//files1//a.txt");
-                    break;
-                case "После однофазной":
-                    file = new FileWrapper("other//files2//a.txt");
-                    break;
-            }
-
-            List<String> allNumbers = null;
-            int size = 0;
-
-            try {
-                file.open();
-                size = file.getSize();
-                if(end >= size || start >= size) {
-                    showErrorAlert("В файле всего " + size+ " чисел", "Проверьте корректность интервала");
-                    return;
-                }
-                allNumbers = file.getNumbersInInterval(start, end);
-                file.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            fillTable(tableInterval, List.of(allNumbers));
-        });
+        fillTable(tableInterval, allNumbers);
     }
 
     //диалог с ошибкой
